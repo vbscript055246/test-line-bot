@@ -375,10 +375,12 @@ def handle_message(event):
 
     if event.message.text == "轉系":
         content = ""
+
         chrome_options = Options()
+        chrome_options.binary_location = "/app/.apt/usr/bin/google-chrome-stable"
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
-        browser = webdriver.Chrome("./chromedriver.exe", chrome_options=chrome_options)
+        browser = webdriver.Chrome(chrome_options=chrome_options)
 
         wait = ui.WebDriverWait(browser, 100000)    # 生成等待物件 負責等網頁跑完的相關事項 100000是等待時間的最大值
         browser.get("http://academics.ntou.edu.tw/main-board.aspx")
