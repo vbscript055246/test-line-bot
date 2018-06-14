@@ -124,6 +124,7 @@ def get_page_number(content):
     page_number = content[start_index + 5: end_index]
     return int(page_number) + 1
 
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -142,6 +143,7 @@ def callback():
 
     return 200
 
+
 def FE():
     ele = '1309707529076258'
     res = requests.get('https://graph.facebook.com/v2.10/{}/?fields=posts{{full_picture}}&access_token={}'.format(ele, token))
@@ -155,6 +157,7 @@ def FE():
             content.append(information['full_picture'])
     return content
 
+
 def driver():
     ele = '119133272075216'
     res = requests.get('https://graph.facebook.com/v2.10/{}/?fields=posts{{full_picture}}&access_token={}'.format(ele, token))
@@ -167,6 +170,7 @@ def driver():
             count += 1
             content.append(information['full_picture'])
     return content
+
 
 def Dcard():
     target_url = 'https://www.dcard.tw/f/ntou'
@@ -184,6 +188,7 @@ def Dcard():
                 content += '{}\n{}\n\n'.format(txt,link)
     return content
 
+
 def U2():
     target_url = 'https://www.youtube.com/feed/trending?hl=zh-TW&gl=TW'
     head = 'https://www.youtube.com'
@@ -196,6 +201,7 @@ def U2():
         data = '{}\n{}\n\n'.format(text['title'],head + text['href'])
         content += data
     return content
+
 
 def MEI():
     target_url = 'http://www.mei.ntou.edu.tw/bin/home.php'
@@ -210,6 +216,7 @@ def MEI():
         data ='{}\n{}\n\n'.format(text['title'],text['href'])
         content += data
     return content
+
 
 def ptt_beauty():
     rs = requests.session()
@@ -241,6 +248,7 @@ def ptt_beauty():
         content += data
     return content
 
+
 def craw_page(res, push_rate):
     soup_ = BeautifulSoup(res.text, 'html.parser')
     article_seq = []
@@ -270,6 +278,7 @@ def craw_page(res, push_rate):
             print('本文已被刪除', e)
     return article_seq
 
+
 def crawl_page_gossiping(res):
     soup = BeautifulSoup(res.text, 'html.parser')
     article_gossiping_seq = []
@@ -293,18 +302,20 @@ def crawl_page_gossiping(res):
             print('delete', e)
     return article_gossiping_seq
 
+
 def connect_db(db_string):
     db_session = sessionmaker(bind=create_engine(db_string))
     return db_session()
+
 
 def get_iu(session):
     obj = session.query(Images).all()
     content = []
     for i in obj:
-		content.append(i.Url)
+        content.append(i.Url)
     session.close()
     return content
-	
+
 @handler.add(MessageEvent, message=TextMessage)
 
 def handle_message(event):
@@ -421,7 +432,7 @@ def handle_message(event):
     if event.message.text == '抽妹子':
         content = get_iu() # ptt_beauty()
 
-        nb = random.randint(0,len(content)-1)
+        nb = random.randint(0, len(content)-1)
 
         image_message = ImageSendMessage(
             original_content_url=content(nb),
