@@ -8,7 +8,9 @@ from imgurpython import ImgurClient
 from selenium import webdriver
 import selenium.webdriver.support.ui as ui
 from selenium.webdriver.chrome.options import Options
-
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from dbModel import Images, DB_connect
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -61,7 +63,6 @@ def pattern_Nomurmur(text):
     for pattern in patterns:
         if re.search(pattern, text, re.IGNORECASE):
             return True
-
 
 def pattern_about(text):
     patterns = [
@@ -269,7 +270,6 @@ def craw_page(res, push_rate):
             print('本文已被刪除', e)
     return article_seq
 
-
 def crawl_page_gossiping(res):
     soup = BeautifulSoup(res.text, 'html.parser')
     article_gossiping_seq = []
@@ -293,6 +293,18 @@ def crawl_page_gossiping(res):
             print('delete', e)
     return article_gossiping_seq
 
+def connect_db(db_string):
+    db_session = sessionmaker(bind=create_engine(db_string))
+    return db_session()
+
+def get_iu(session):
+    obj = session.query(Images).all()
+	content = []
+    for i in obj:
+		content.append(i.Url)
+    session.close()
+	return content
+	
 @handler.add(MessageEvent, message=TextMessage)
 
 def handle_message(event):
@@ -407,10 +419,17 @@ def handle_message(event):
         return 0
 
     if event.message.text == '抽妹子':
-        content = ptt_beauty()
+        content = get_iu()# ptt_beauty()
+		
+		nb  = random.randint(0,len(content)-1)
+		
+		image_message = ImageSendMessage(
+            original_content_url=content(nb),
+            preview_image_url=content(nb)
+        )
+		
         line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=content))
+            event.reply_token, image_message)
         return 0
 
     if pattern_NTOU_Eat(event.message.text):
