@@ -299,11 +299,11 @@ def connect_db(db_string):
 
 def get_iu(session):
     obj = session.query(Images).all()
-	content = []
+    content = []
     for i in obj:
 		content.append(i.Url)
     session.close()
-	return content
+    return content
 	
 @handler.add(MessageEvent, message=TextMessage)
 
@@ -419,15 +419,15 @@ def handle_message(event):
         return 0
 
     if event.message.text == '抽妹子':
-        content = get_iu()# ptt_beauty()
-		
-		nb  = random.randint(0,len(content)-1)
-		
-		image_message = ImageSendMessage(
+        content = get_iu() # ptt_beauty()
+
+        nb = random.randint(0,len(content)-1)
+
+        image_message = ImageSendMessage(
             original_content_url=content(nb),
             preview_image_url=content(nb)
         )
-		
+
         line_bot_api.reply_message(
             event.reply_token, image_message)
         return 0
