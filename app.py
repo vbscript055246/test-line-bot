@@ -430,7 +430,7 @@ def handle_message(event):
         return 0
 
     if event.message.text == '抽妹子':
-        content = get_iu() # ptt_beauty()
+        content = get_iu(connect_db(DB_connect))    # ptt_beauty()
 
         nb = random.randint(0, len(content)-1)
 
