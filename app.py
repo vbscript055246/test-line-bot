@@ -431,12 +431,15 @@ def handle_message(event):
 
     if event.message.text == '抽妹子':
         content = get_iu(connect_db(DB_connect))    # ptt_beauty()
-
+        url = ""
         nb = random.randint(0, len(content)-1)
-
+        for ind, obj in enumerate(content, 0):
+            if nb == ind:
+                url = obj
+                break
         image_message = ImageSendMessage(
-            original_content_url=content(nb),
-            preview_image_url=content(nb)
+            original_content_url=url,
+            preview_image_url=url
         )
 
         line_bot_api.reply_message(
