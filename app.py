@@ -430,10 +430,10 @@ def handle_message(event):
 
     if event.message.text == '抽妹子':
         url = get_iu(connect_db(DB_connect))    # ptt_beauty()
-        print(type(url))
+        print(type(url.url))
         image_message = ImageSendMessage(
-            original_content_url=url,
-            preview_image_url=url
+            original_content_url=url.url,
+            preview_image_url=url.url
         )
         line_bot_api.reply_message(
             event.reply_token, image_message)
