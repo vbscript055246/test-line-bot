@@ -15,7 +15,6 @@ class Images(Base):
     Url = Column(String)
     CreateDate = Column(DateTime(timezone=True), server_default=func.now())
 
-
 if __name__ == '__main__':
     engine = create_engine(DB_connect)
     session = sessionmaker()
