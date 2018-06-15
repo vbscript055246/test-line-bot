@@ -309,17 +309,16 @@ def connect_db(db_string):
 
 
 def get_iu(session):
-    obj = session.query(Images).all()
-    content = []
-    for i in obj:
-        content.append(i.Url)
+    nb = random.randint(0, session.query(Images).count()-1)
+    img = session.query(Images).filter(Todo.id == nb).first()
     session.close()
-    return content
+    return img
+
 
 @handler.add(MessageEvent, message=TextMessage)
 
+
 def handle_message(event):
-    
     if pattern_hello(event.message.text):
         line_bot_api.reply_message(
             event.reply_token,
@@ -430,18 +429,11 @@ def handle_message(event):
         return 0
 
     if event.message.text == '抽妹子':
-        content = get_iu(connect_db(DB_connect))    # ptt_beauty()
-        url = ""
-        nb = random.randint(0, len(content)-1)
-        for ind, obj in enumerate(content, 0):
-            if nb == ind:
-                url = obj
-                break
+        url = get_iu(connect_db(DB_connect))    # ptt_beauty()
         image_message = ImageSendMessage(
             original_content_url=url,
             preview_image_url=url
         )
-
         line_bot_api.reply_message(
             event.reply_token, image_message)
         return 0
