@@ -310,7 +310,7 @@ def connect_db(db_string):
 
 def get_iu(session):
     nb = random.randint(0, session.query(Images).count()-1)
-    img = session.query(Images).filter(Todo.id == nb).first()
+    img = session.query(Images).filter(Images.id == nb).first()
     session.close()
     return img
 
