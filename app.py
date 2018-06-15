@@ -310,7 +310,7 @@ def connect_db(db_string):
 
 def get_iu(session):
     nb = random.randint(0, session.query(Images).count()-1)
-    img = session.query(Images).filter(Images.id == nb).json().get('Url')
+    img = session.query(Images).filter(Images.id == nb).one()
     session.close()
     return img
 
@@ -430,6 +430,7 @@ def handle_message(event):
 
     if event.message.text == '抽妹子':
         url = get_iu(connect_db(DB_connect))    # ptt_beauty()
+        print(type(url))
         image_message = ImageSendMessage(
             original_content_url=url,
             preview_image_url=url
