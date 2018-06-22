@@ -309,7 +309,7 @@ def connect_db(db_string):
 
 
 def get_iu(session):
-
+    print(session.query(Images).count)
     nb = random.randint(0, session.query(Images).count-1)
     print(nb)
     img = session.query(Images).filter_by(id=nb).one().Url
