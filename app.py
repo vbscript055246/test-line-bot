@@ -304,7 +304,9 @@ def crawl_page_gossiping(res):
 
 
 def connect_db(db_string):
+    print('connecting')
     db_session = sessionmaker(bind=create_engine(db_string))
+    print('succeed')
     return db_session()
 
 
