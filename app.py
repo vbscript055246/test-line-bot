@@ -431,6 +431,7 @@ def handle_message(event):
         return 0
 
     if event.message.text == '抽妹子':
+        print('get in')
         url = get_iu(connect_db(DB_connect))    # ptt_beauty()
         print(url)
         image_message = ImageSendMessage(
