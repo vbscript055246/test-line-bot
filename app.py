@@ -26,7 +26,6 @@ line_bot_api = LineBotApi('uLkoN0+ed2cqEaU+kH0EWoKdgBl1hXA/95EaQ8WZEQyBRrR28Dkwb
 handler = WebhookHandler('8219a79f77e4a30b9f14ca52cdccdf6e')
 
 token = '2013603382218265|Bn5X5MRhythURJ865FebY_kM53A'
-fanpage = {"162599767271235":"艦隊Collection"}
 
 client_id = '5a165b840d4337f'
 client_secret = '4f6565aa49229f9515d026aee90de66300bebc0a'
@@ -39,63 +38,35 @@ def hello():
 '''
 
 def pattern_NTOU_Eat(text):
-    patterns = [
-        '想吃',
-    ]
-    for pattern in patterns:
-        if re.search(pattern, text, re.IGNORECASE):
-            return True
+    return re.search('想吃', text, re.IGNORECASE)
 
 def pattern_No18(text):
     patterns = [
         '%%', '舔腿', '摳', '胸', '乳', '之空','緣之',
         '打槍', '尻槍', '掏槍', '濕','想%','想舔','嘿嘿嘿',
-        '打飛', '射' , '色色的' ,'阿斯','開車',
+        '打飛', '射', '色色的', '阿斯', '開車',
     ]
     for pattern in patterns:
         if re.search(pattern, text, re.IGNORECASE):
             return True
-        
+
 def pattern_Nomurmur(text):
     patterns = [
-        '恩','嗯', '喔', '哈哈', '呵','所以呢'
+        '恩', '嗯', '喔', '哈哈', '呵', '所以呢'
     ]
     for pattern in patterns:
         if re.search(pattern, text, re.IGNORECASE):
             return True
 
 def pattern_about(text):
-    patterns = [
-        'about', 'About', 'ABOUT', 'ABout', 'ABOut', 'ABOUt',
-        'ABOUT', 'aBout', 'aBOut', 'aBOUt', 'aBOUT', 'abOut',
-        'abOUt', 'abOUT', 'aboUt', 'aboUT', 'abouT', 'aBoUt',
-        'aBoUT', 'AbOut', 'AbOUt', 'AbOUT', 'abOuT', 'AbOuT',
-    ]
-    for pattern in patterns:
-        if re.search(pattern, text, re.IGNORECASE):
-            return True
+    return re.search('about', text, re.IGNORECASE)
         
 def pattern_help(text):
-    patterns = [
-        'help', 'Help', 'HElp', 'HELP', 'hElp', 'hELp',
-        'hELP', 'heLp', 'heLP', 'helP', 'HeLp', 'HeLP',
-        'HelP', 'hElP',
-    ]
-    for pattern in patterns:
-        if re.search(pattern, text, re.IGNORECASE):
-            return True
+    return re.search("help", text, re.IGNORECASE)
         
 def pattern_hello(text):
     patterns = [
-        '安安', '安', 'hi', 'HI', 'hello', '你好',
-    ]
-    for pattern in patterns:
-        if re.search(pattern, text, re.IGNORECASE):
-            return True
-
-def pattern_mei(text):
-    patterns = [
-        'mei', 'Mei', 'MEi', 'MeI', 'MEI', 'mEi', 'mEI' ,'meI',
+        '安', 'hi', 'hello', '你好',
     ]
     for pattern in patterns:
         if re.search(pattern, text, re.IGNORECASE):
@@ -103,16 +74,7 @@ def pattern_mei(text):
 
 def pattern_NololiC(text):
     patterns = [
-        '蘿莉', 'loli', '幼女','貝瑞',
-    ]
-    for pattern in patterns:
-        if re.search(pattern, text, re.IGNORECASE):
-            return True
-
-def pattern_KCI(text):
-    patterns = [
-        'KCI', 'kci', 'kancollectimage','KanCollectImage','KanCollect',
-        'kancollect', 'kc', 'KC',
+        '蘿莉', 'loli', '幼女', '貝瑞',
     ]
     for pattern in patterns:
         if re.search(pattern, text, re.IGNORECASE):
@@ -144,6 +106,23 @@ def callback():
     return 200
 
 
+def calendar(year):
+    res = requests.get("http://academic.ntou.edu.tw/files/11-1003-834.php?Lang=zh-tw")
+    res.encoding = "UTF-8"
+    soup = BeautifulSoup(res.text, 'html.parser')
+    url = ""
+    for item in soup.find_all("div", "h5"):
+        if re.search("year", item.a.string):
+            # print(item.a.string)
+            url = item.a['href']
+            break
+
+    res = requests.get(url)
+    res.encoding = "UTF-8"
+    soup = BeautifulSoup(res.text, 'html.parser')
+    # print(soup.find("div", "floatholder").a.find_next_sibling("a")['href'])
+    return soup.find("div", "floatholder").a.find_next_sibling("a")['href']
+
 def FE():
     ele = '1309707529076258'
     res = requests.get('https://graph.facebook.com/v2.10/{}/?fields=posts{{full_picture}}&access_token={}'.format(ele, token))
@@ -157,34 +136,18 @@ def FE():
             content.append(information['full_picture'])
     return content
 
-
-def driver():
-    ele = '119133272075216'
-    res = requests.get('https://graph.facebook.com/v2.10/{}/?fields=posts{{full_picture}}&access_token={}'.format(ele, token))
-    content = []
-    count = 0
-    for information in res.json().get('posts').get('data'):
-        if count == 5:
-            break
-        if 'full_picture' in information:
-            count += 1
-            content.append(information['full_picture'])
-    return content
-
-
-def Dcard():
-    target_url = 'https://www.dcard.tw/f/ntou'
-    head = 'https://www.dcard.tw/f/ntou/p/'
-    rs = requests.session()
-    res = rs.get(target_url, verify=False)
+def Dcard(school):
+    target_url = 'https://www.dcard.tw/f/{}'.format(school)
+    head = 'https://www.dcard.tw/f/{}/p/'.format(school)
+    res = requests.get(target_url, verify=False)
     soup = BeautifulSoup(res.text, 'html.parser')
     content = ""
-    for i, text in enumerate(soup.select('.PostEntry_root_V6g0r'),0):
+    for i, text in enumerate(soup.select('.PostEntry_root_V6g0r'), 0):
         if i == 15:
             return content
-        for index, txt in enumerate(re.split('[/]',text['href']),0):
+        for index, txt in enumerate(re.split('[/]', text['href']), 0):
             if index == 4:
-                link = head + urllib.parse.quote_plus(txt,encoding = 'utf-8')
+                link = head + urllib.parse.quote_plus(txt, encoding='utf-8')
                 content += '{}\n{}\n\n'.format(txt,link)
     return content
 
@@ -199,21 +162,6 @@ def U2():
         if index == 15:
             return content
         data = '{}\n{}\n\n'.format(text['title'],head + text['href'])
-        content += data
-    return content
-
-
-def MEI():
-    target_url = 'http://www.mei.ntou.edu.tw/bin/home.php'
-    rs = requests.session()
-    res = rs.get(target_url, verify=False)
-    res.encoding = 'utf-8'
-    soup = BeautifulSoup(res.text, 'html.parser')
-    content = ""
-    for index, text in enumerate(soup.select('.ptname a'),0):
-        if index == 15:
-            return content
-        data ='{}\n{}\n\n'.format(text['title'],text['href'])
         content += data
     return content
 
@@ -323,35 +271,32 @@ def get_iu(session):
 
 
 def handle_message(event):
+
     if pattern_hello(event.message.text):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="安安R~R~R~!!!"))
         return 0
 
-    if event.message.text == "海大Dcard":
-        content = Dcard()
+    if re.search("Dcard", event.message.text, re.IGNORECASE):
+        if event.message.text.replace("Dcard").strip() == "":
+            content = "輸入錯誤"
+        else:
+            content = Dcard(event.message.text.replace("Dcard").strip())
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=content))
         return 0
 
-    if event.message.text == "u2":
+    if re.search("(youtube|u2)", event.message.text, re.IGNORECASE):
         content = U2()
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=content))
         return 0
-    
-    if pattern_mei(event.message.text):
-        content = MEI()
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=content))
-        return 0
-    
+
     if pattern_No18(event.message.text):
-        if (random.randint(0,999)%2):
+        if (random.randint(0, 999)%2):
             image_message = ImageSendMessage(
                 original_content_url='https://i.imgur.com/zJoNKZ4.jpg',
                 preview_image_url='https://i.imgur.com/zJoNKZ4.jpg'
@@ -389,7 +334,7 @@ def handle_message(event):
             event.reply_token, image_message)
         return 0
     
-    if event.message.text == 'GPED':
+    if re.search("GPED", event.message.text, re.IGNORECASE):
         url = "https://i.imgur.com/tmkhCoQ.png"
         image_message = ImageSendMessage(
             original_content_url=url,
@@ -572,16 +517,14 @@ def handle_message(event):
         content = ""
         
         if len(ST) == 0:
-            rnd = random.randint(0,len(restraunt)-1)
-            for i,item in enumerate(restraunt,0):
+            rnd = random.randint(0, len(restraunt)-1)
+            for i, item in enumerate(restraunt, 0):
                 if i == rnd:
                     content = item
         else:
-            for i,temp in enumerate(restraunt,0):
+            for i, temp in enumerate(restraunt,0):
                 flag = 0
                 for pat in ST:
-                    #print(pat)
-                    #print(temp)
                     if not re.search(pat, temp, re.IGNORECASE):
                         flag = 1
                         break
@@ -591,62 +534,6 @@ def handle_message(event):
         if content == "":
             content = "沒有符合要求的店"
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text=content))
-        return 0
-    
-    if event.message.text == 'Driver?!':
-        images = []
-        for url in driver():
-            image_message = ImageSendMessage(
-                original_content_url=url,
-                preview_image_url=url
-            )
-            images.append(image_message)
-        line_bot_api.reply_message(
-            event.reply_token, images)
-        return 0
-
-    if pattern_KCI(event.message.text):
-        content = ""
-        a = []
-        res = requests.get('https://graph.facebook.com/v2.10/{}/?fields=posts{{full_picture}}&access_token={}'.format("162599767271235", token))
-        num = 0
-        while num < 10:
-            num+=1
-            if num == 1:
-                for information in res.json().get('posts').get('data'):
-                    if 'full_picture' in information:
-                        a.append(information['full_picture'])
-                
-                if 'next' in res.json().get('posts')['paging']:
-                    res = requests.get(res.json().get('posts').get('paging')['next'])
-                else:
-                    break
-                
-            else:
-                for information in res.json().get('data'):
-                    if 'full_picture' in information:
-                        a.append(information['full_picture'])
-                    
-                if 'next' in res.json()['paging']:
-                    res = requests.get(res.json().get('paging')['next'])
-                else:
-                    break
-                
-        nb  = random.randint(0,len(a)-1)
-        for index, information in enumerate(a,0):
-            if index == nb:
-                content = information
-                url =information
-                break
-            
-        image_message = ImageSendMessage(
-            original_content_url=url,
-            preview_image_url=url
-        )
-        
-        send = [image_message]#,TextSendMessage(text=content)]
-        line_bot_api.reply_message(
-            event.reply_token, send)
         return 0
 
     if pattern_NololiC(event.message.text):
@@ -660,10 +547,9 @@ def handle_message(event):
         return 0
     
     if pattern_help(event.message.text):
-        content ="""
-海大Dcard
+        content = """
+大學Dcard
 海大行事曆
-mei
 GPED
 u2
 靠北工程師
@@ -676,19 +562,14 @@ about
             TextSendMessage(text=content))
         return 0
     
-    if event.message.text == "海大行事曆":
-        im = ImageSendMessage(
-            original_content_url='https://i.imgur.com/Dok0uGm.jpg',
-            preview_image_url='https://i.imgur.com/Dok0uGm.jpg'
-        )
-        im1 = ImageSendMessage(
-            original_content_url='https://i.imgur.com/YMVh1WW.jpg',
-            preview_image_url='https://i.imgur.com/YMVh1WW.jpg'
-        )
-        image_message = [im1,im]
+    if re.search("海大行事曆", event.message.text):
+        if event.message.text.replace("海大行事曆").strip() == "":
+            context = "輸入錯誤"
+        else:
+            context = calendar(event.message.text.replace("海大行事曆").strip())
         line_bot_api.reply_message(
             event.reply_token,
-            image_message)
+            TextSendMessage(text=context))
         return 0
 
     if pattern_about(event.message.text):
@@ -753,6 +634,7 @@ about
         #event.reply_token,
         #TextSendMessage(text=content))
     return 0
+
 
 if __name__ == "__main__":
     app.run()

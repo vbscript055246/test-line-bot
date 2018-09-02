@@ -10,10 +10,11 @@ DB_connect = 'postgresql+psycopg2://oryssuczcsrgtv:08a41edbb9d5552eb061f84c07e64
 
 class Images(Base):
     __tablename__ = 'Images'
-
-    id = Column(Integer, primary_key=True)
+    num = Column(Integer, primary_key=True)
+    id = Column(Integer)
     Url = Column(String)
     CreateDate = Column(DateTime(timezone=True), server_default=func.now())
+
 
 if __name__ == '__main__':
     engine = create_engine(DB_connect)
