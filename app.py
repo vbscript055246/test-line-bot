@@ -111,17 +111,21 @@ def calendar(year):
     res.encoding = "UTF-8"
     soup = BeautifulSoup(res.text, 'html.parser')
     url = ""
-    for item in soup.find_all("div", "h5"):
-        if re.search("year", item.a.string):
-            # print(item.a.string)
-            url = item.a['href']
-            break
+    if year == "":
+        url = soup.find("div", "h5").a['href']
+    else:
+        for item in soup.find_all("div", "h5"):
+            if re.search(year, item.a.string):
+                # print(item.a.string)
+                url = item.a['href']
+                break
 
     res = requests.get(url)
     res.encoding = "UTF-8"
     soup = BeautifulSoup(res.text, 'html.parser')
     # print(soup.find("div", "floatholder").a.find_next_sibling("a")['href'])
     return soup.find("div", "floatholder").a.find_next_sibling("a")['href']
+
 
 def FE():
     ele = '1309707529076258'
