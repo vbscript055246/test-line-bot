@@ -279,10 +279,10 @@ def handle_message(event):
         return 0
 
     if re.search("Dcard", event.message.text, re.IGNORECASE):
-        if event.message.text.replace("Dcard").strip() == "":
+        if event.message.text.replace("Dcard", "").strip() == "":
             content = "輸入錯誤"
         else:
-            content = Dcard(event.message.text.replace("Dcard").strip())
+            content = Dcard(event.message.text.replace("Dcard", "").strip())
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=content))
@@ -563,10 +563,10 @@ about
         return 0
     
     if re.search("海大行事曆", event.message.text):
-        if event.message.text.replace("海大行事曆").strip() == "":
+        if event.message.text.replace("海大行事曆", "").strip() == "":
             context = "輸入錯誤"
         else:
-            context = calendar(event.message.text.replace("海大行事曆").strip())
+            context = calendar(event.message.text.replace("海大行事曆", "").strip())
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=context))
