@@ -126,7 +126,6 @@ def calendar(year):
     # print(soup.find("div", "floatholder").a.find_next_sibling("a")['href'])
     return soup.find("div", "floatholder").a.find_next_sibling("a")['href']
 
-
 def FE():
     ele = '1309707529076258'
     res = requests.get('https://graph.facebook.com/v2.10/{}/?fields=posts{{full_picture}}&access_token={}'.format(ele, token))
@@ -283,10 +282,10 @@ def handle_message(event):
         return 0
 
     if re.search("Dcard", event.message.text, re.IGNORECASE):
-        if event.message.text.replace("Dcard", "").strip() == "":
+        if re.sub("dcard", "", event.message.text, flags=re.I).strip() == "":
             content = "輸入錯誤"
         else:
-            content = Dcard(event.message.text.replace("Dcard", "").strip())
+            content = Dcard(re.sub("dcard", "", event.message.text, flags=re.I).strip())
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=content))
@@ -567,10 +566,7 @@ about
         return 0
     
     if re.search("海大行事曆", event.message.text):
-        if event.message.text.replace("海大行事曆", "").strip() == "":
-            context = "輸入錯誤"
-        else:
-            context = calendar(event.message.text.replace("海大行事曆", "").strip())
+        context = calendar(event.message.text.replace("海大行事曆", "").strip())
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=context))
