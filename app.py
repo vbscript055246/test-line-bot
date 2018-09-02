@@ -286,6 +286,7 @@ def handle_message(event):
             content = "輸入錯誤"
         else:
             content = Dcard(re.sub("dcard", "", event.message.text, flags=re.I).strip())
+            print(content)
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=content))
