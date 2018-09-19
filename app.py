@@ -22,14 +22,14 @@ from linebot.models import *
 
 app = Flask(__name__)
 
-line_bot_api = LineBotApi('uLkoN0+ed2cqEaU+kH0EWoKdgBl1hXA/95EaQ8WZEQyBRrR28Dkwbsgdfb/Xq7g4hQLzYD0fAZHgFtXSBqmDe6K5QpTUv42G9MjuvZs7spCxcM6sww2AJ/wLE13LbWd0UbNJLos4wdO5Y8Mwi+eb0QdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('8219a79f77e4a30b9f14ca52cdccdf6e')
+line_bot_api = LineBotApi('')
+handler = WebhookHandler('')
 
-token = '2013603382218265|Bn5X5MRhythURJ865FebY_kM53A'
+token = ''
 
-client_id = '5a165b840d4337f'
-client_secret = '4f6565aa49229f9515d026aee90de66300bebc0a'
-album_id = 'vz4kB'
+client_id = ''
+client_secret = ''
+album_id = ''
 
 '''
 @app.route("/")
@@ -42,9 +42,7 @@ def pattern_NTOU_Eat(text):
 
 def pattern_No18(text):
     patterns = [
-        '%%', '舔腿', '摳', '胸', '乳', '之空','緣之',
-        '打槍', '尻槍', '掏槍', '濕','想%','想舔','嘿嘿嘿',
-        '打飛', '射', '色色的', '阿斯', '開車',
+        '%%',
     ]
     for pattern in patterns:
         if re.search(pattern, text, re.IGNORECASE):
@@ -74,7 +72,7 @@ def pattern_hello(text):
 
 def pattern_NololiC(text):
     patterns = [
-        '蘿莉', 'loli', '幼女', '貝瑞',
+        '貝瑞',
     ]
     for pattern in patterns:
         if re.search(pattern, text, re.IGNORECASE):
@@ -600,10 +598,6 @@ about
                     MessageTemplateAction(
                         label='隨便來張動漫圖',
                         text='隨便來張動漫圖'
-                    ),
-                    MessageTemplateAction(
-                        label='海大Dcard',
-                        text='海大Dcard'
                     ),
                     MessageTemplateAction(
                         label='靠北工程師',
